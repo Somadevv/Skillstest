@@ -1,0 +1,74 @@
+@import '../../../styles/global/variables';
+
+.header {
+  font-size: 14px;
+  -webkit-box-shadow: -1px 10px 13px -10px rgba(0, 0, 0, 0.15);
+  -moz-box-shadow: -1px 10px 13px -10px rgba(0, 0, 0, 0.15);
+  box-shadow: -1px 10px 13px -10px rgba(0, 0, 0, 0.15);
+  @media only screen and (min-width: $tablet) {
+    font-size: 18px;
+  }
+
+  &_inner {
+    display: flex;
+    justify-content: space-between;
+    padding: 0 30px;
+
+    @media only screen and (min-width: $tablet) {
+      padding: 0 100px;
+    }
+
+    @media only screen and (min-width: $desktop-sm) {
+      padding: 4.25px 225px;
+    }
+  }
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    text-decoration: none;
+
+    @media only screen and (min-width: $tablet) {
+      gap: 8px;
+    }
+
+    & img {
+      width: 25px;
+      height: 20px;
+      @media only screen and (min-width: $tablet) {
+        width: 35px;
+        height: 25px;
+      }
+    }
+
+    &_text {
+      font-family: $oleo-bold;
+      margin: auto;
+      color: black;
+    }
+  }
+  &_menu {
+    ul {
+      padding-inline-start: 0;
+      display: flex;
+      list-style: none;
+      flex-wrap: wrap;
+      gap: 15px;
+
+      @media only screen and (min-width: $tablet) {
+        gap: 40px;
+      }
+      @media only screen and (min-width: $desktop-sm) {
+        gap: 60px;
+      }
+
+      li {
+        white-space: nowrap;
+        a {
+          text-decoration: none;
+          color: #000;
+        }
+      }
+    }
+  }
+}
