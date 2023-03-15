@@ -2,28 +2,38 @@ import React from 'react';
 import styles from './header.module.scss';
 import Image from '../../atoms/Image/Image';
 import Link from 'next/link';
+import localFont from 'next/font/local';
+import Container from '../../common/Container/Container';
+
+const sansLight = localFont({
+  src: '../../../../public/fonts/Soure_Sans_Pro/SourceSansPro-SemiBold.ttf',
+});
 const Header = () => {
   return (
-    <div className={styles.header}>
+    <Container type="global" className={styles.header}>
       <div className={styles.header_inner}>
         <Link href="/" className={styles.logo}>
-          <Image src="/images/logo.png" width={36} height={24} alt="" />
-          <p className={styles.logo_text}>Singupro</p>
+          <Image src="/images/mainlogo.svg" width={120} height={20} alt="" />
         </Link>
         <div className={styles.header_menu}>
           <ul>
             <li>
-              <Link href="/">Log In</Link>
+              <Link href="/" className={sansLight.className}>
+                Log In
+              </Link>
             </li>
             <li>
-              <Link href="/" className="highlight-text-main">
+              <Link
+                href="/"
+                className={`${sansLight.className} highlight-text-main`}
+              >
                 Sign up
               </Link>
             </li>
           </ul>
         </div>
       </div>
-    </div>
+    </Container>
   );
 };
 
