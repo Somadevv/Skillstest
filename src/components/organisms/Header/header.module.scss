@@ -5,6 +5,7 @@
   -webkit-box-shadow: -1px 10px 13px -10px rgba(0, 0, 0, 0.15);
   -moz-box-shadow: -1px 10px 13px -10px rgba(0, 0, 0, 0.15);
   box-shadow: -1px 10px 13px -10px rgba(0, 0, 0, 0.15);
+
   @media only screen and (min-width: $tablet) {
     font-size: 18px;
   }
@@ -12,15 +13,9 @@
   &_inner {
     display: flex;
     justify-content: space-between;
-    padding: 0 30px;
-
-    @media only screen and (min-width: $tablet) {
-      padding: 0 100px;
-    }
-
-    @media only screen and (min-width: $desktop-sm) {
-      padding: 4.25px 225px;
-    }
+    padding: 7.5px 0;
+    max-width: 1000px;
+    margin: 0 auto;
   }
   .logo {
     display: flex;
@@ -32,17 +27,7 @@
       gap: 8px;
     }
 
-    & img {
-      width: 25px;
-      height: 20px;
-      @media only screen and (min-width: $tablet) {
-        width: 35px;
-        height: 25px;
-      }
-    }
-
     &_text {
-      font-family: $oleo-bold;
       margin: auto;
       color: black;
     }
@@ -54,6 +39,7 @@
       list-style: none;
       flex-wrap: wrap;
       gap: 15px;
+      font-size: 16px;
 
       @media only screen and (min-width: $tablet) {
         gap: 40px;
