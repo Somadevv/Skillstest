@@ -1,2 +1,23 @@
+@import '../../../styles/global/variables';
+
 .component {
+  button {
+    display: block;
+    // padding: 10.25px 76.3px;
+    background: $color-main-green;
+    color: #fff;
+    border: 0;
+    border-radius: 25px;
+    margin: 0 auto;
+    white-space: nowrap;
+    cursor: pointer;
+    border: transparent 1px solid;
+    transition: 0.15s;
+
+    &:hover {
+      background: #fff;
+      color: $color-main-green;
+      border: $color-main-green 1px solid;
+    }
+  }
 }

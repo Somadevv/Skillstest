@@ -11,6 +11,7 @@
   }
 
   .form {
+    position: relative;
     &_intro {
       text-align: center;
       h3 {
@@ -24,8 +25,31 @@
       }
     }
 
-    &_item {
+    &_field,
+    .form_field_variant {
       margin-bottom: 30px;
+
+      &_variant {
+        display: flex;
+        justify-content: space-between;
+        align-items: end;
+        gap: 40px;
+        margin-bottom: 10px !important;
+
+        // Find address
+        button {
+          display: block;
+          padding: 10.25px 27px !important;
+          margin-top: 0 !important;
+
+          &:disabled {
+            background: #ebebeb;
+            color: #bbbbbb;
+
+            pointer-events: none;
+          }
+        }
+      }
       label {
         position: relative;
         top: -5px;
@@ -33,18 +57,68 @@
         margin-bottom: 245px;
       }
       input {
-        width: 100%;
+        width: calc(100% - 12px);
         padding: 8.25px 5px;
+        border-radius: 3px;
+
+        border: 1px rgba($color: #000000, $alpha: 0.5) solid;
+        &:hover {
+          border: #6ca1ff 1px solid !important;
+        }
       }
     }
+    // Sign up
     button {
-      display: block;
       padding: 10.25px 76.3px;
-      background: $color-main-green;
-      color: #fff;
-      border: 0;
-      border-radius: 25px;
-      margin: 0 auto;
+      margin-top: 60px;
+    }
+    .enterAdressManually {
+      text-decoration: underline;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 0;
+      font-size: 16px;
+      color: #000000ba;
+      margin-top: 0;
+    }
+    .addressBox {
+      position: relative;
+      left: -80px;
+      width: 450px;
+      border: #979797 1px solid;
+      margin-top: 40px;
+      border-radius: 3px;
+
+      ul {
+        list-style: none;
+        margin-block-start: 0;
+        margin-block-end: 0;
+        padding: 0;
+        overflow-y: scroll;
+
+        li {
+          padding: 11px 6px;
+          background: #fff;
+          cursor: pointer;
+          transition: 0.06s;
+
+          &:hover {
+            background: #c8c7c7;
+          }
+        }
+
+        li:nth-child(odd) {
+          background: #e9e9e9;
+
+          &:hover {
+            background: #c8c7c7;
+          }
+        }
+      }
+    }
+
+    &_manualAddress {
     }
   }
 }

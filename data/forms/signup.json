@@ -35,7 +35,8 @@
     {
       "label": "Postcode",
       "type": "text",
-      "name": "postcode"
+      "name": "postcode",
+      "buttonLayout": true
     }
   ],
   "secondary": [
