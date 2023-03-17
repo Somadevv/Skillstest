@@ -6,6 +6,8 @@ import localFont from 'next/font/local';
 import { useState } from 'react';
 import { useRouter } from 'next/router';
 
+import React from 'react';
+import Input from '../../atoms/Input/Input';
 const sansLight = localFont({
   src: '../../../../public/fonts/Soure_Sans_Pro/SourceSansPro-Light.ttf',
 });
@@ -20,9 +22,12 @@ const SignupForm = () => {
   const router = useRouter();
   const [manaualAddress, setManualAddress] = useState(false);
   const [findAddress, setFindAddress] = useState(false);
+
   const [sortedAddressList, setSortedAddressList] = useState({});
   const [enteredPostcode, setEnteredPostcode] = useState('tr38');
-  const [primaryFields, setPrimaryFields] = useState(generateInitialState());
+  const [secondaryFields, setSecondaryFields] = useState(
+    generateInitialState()
+  );
 
   function generateInitialState() {
     const inputFields = {};
@@ -38,8 +43,8 @@ const SignupForm = () => {
   // Handle address box list items
   const handleAddressItem = (e) => {
     const clickedFieldValue = e.currentTarget.innerHTML.split(', ');
-    setPrimaryFields({
-      ...primaryFields,
+    setSecondaryFields({
+      ...secondaryFields,
       address1: clickedFieldValue[0],
       town: clickedFieldValue[1],
       country: clickedFieldValue[2],
@@ -64,8 +69,8 @@ const SignupForm = () => {
 
   const updateInput = (e) => {
     const { name, value } = e.currentTarget;
-    setPrimaryFields({
-      ...primaryFields,
+    setSecondaryFields({
+      ...secondaryFields,
       [name]: value,
     });
   };
@@ -116,7 +121,13 @@ const SignupForm = () => {
                     {field.label}
                   </label>
                 )}
-                <input type={field.type} className={sansRegular.className} />
+
+                <Input
+                  type={field.type}
+                  icon={field.hasIcon}
+                  className={sansRegular.className}
+                  name={field.name}
+                />
               </div>
             ) : (
               <>
@@ -140,7 +151,7 @@ const SignupForm = () => {
                               type={field.type}
                               className={sansRegular.className}
                               onChange={updateInput}
-                              value={primaryFields[field.name]}
+                              value={secondaryFields[field.name]}
                             />
                           </div>
                         );
