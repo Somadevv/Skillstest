@@ -3,10 +3,10 @@
 .container {
   margin: 0 auto;
   &_global {
-    padding: 0 15px;
+    padding: 0 20px;
 
     @media only screen and (min-width: $tablet) {
-      padding: 0 30px;
+      padding: 0 60px;
     }
 
     @media only screen and (min-width: $desktop-sm) {
@@ -25,14 +25,14 @@
     }
   }
   &_content_sm {
-    padding: 0 120px;
+    padding: 0 20px;
 
     @media only screen and (min-width: $tablet) {
-      padding: 0 240px;
+      padding: 0 120px;
     }
 
     @media only screen and (min-width: $desktop-sm) {
-      padding: 0 480px;
+      padding: 0 240px;
     }
   }
 }

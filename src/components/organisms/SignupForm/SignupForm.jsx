@@ -146,7 +146,8 @@ const SignupForm = () => {
                                 {field.label}
                               </label>
                             )}
-                            <input
+
+                            <Input
                               name={field.name}
                               type={field.type}
                               className={sansRegular.className}
@@ -168,7 +169,7 @@ const SignupForm = () => {
                         {field.label}
                       </label>
                     )}
-                    <input
+                    <Input
                       type={field.type}
                       className={sansRegular.className}
                     />
@@ -185,7 +186,7 @@ const SignupForm = () => {
             )
           )}
         <button
-          className={`${styles.enterAdressManually} ${sansRegular.className}`}
+          className={`${styles.enterAddressManually} ${sansRegular.className}`}
           onClick={() => setManualAddress(!manaualAddress)}
           type="button"
         >
