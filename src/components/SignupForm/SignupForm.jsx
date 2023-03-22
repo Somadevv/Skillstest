@@ -38,11 +38,23 @@ const validationSchema = Yup.object().shape({
 const SignupForm = () => {
   const router = useRouter();
   const [manualAddress, setManualAddress] = useState(false);
+  const [pushErrorMessage, setPushErrorMessage] = useState(false);
   const [iconState, setIconState] = useState(false);
   const [enteredPostcode, setEnteredPostcode] = useState('');
-  const [fetchedAddresses, setFetchedAddresses] = useState({});
   const [sortedAddressList, setSortedAddressList] = useState({});
   const [findAddress, setFindAddress] = useState(false);
+
+  const initialFormValues = {
+    firstName: '',
+    lastName: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
+    addressLine1: '',
+    townOrCity: '',
+    country: '',
+    postcode: '',
+  };
 
   const formFields = {
     primaryFields: [
@@ -111,7 +123,7 @@ const SignupForm = () => {
       .then((res) => res.json())
       .then((data) => {
         if (data.addresses.length >= 1) {
-          setFetchedAddresses(formatAddresses(data));
+          formatAddresses(data);
         } else {
           console.log('No addresses found');
         }
@@ -135,11 +147,16 @@ const SignupForm = () => {
     });
     setSortedAddressList(formattedAddress);
   };
-  const handleFormSubmission = (errors) => {
-    if (errors.length <= 0) {
+
+  const handleFormSubmission = (e) => {
+    if (Object.keys(e).length >= 1) {
+      setPushErrorMessage(true);
+    } else {
+      setPushErrorMessage(false);
       router.push('/signup-success');
     }
   };
+
   // Generate form fields
   const generateFormFields = (
     errors,
@@ -152,16 +169,12 @@ const SignupForm = () => {
     const fields = arrToMap.reduce((acc, field) => {
       const { name, type, label, splitLayout, toggleIcon } = field;
       const fieldError = errors[name] && touched[name];
-      const updatedFields = [...primaryFields];
 
       const handleChange = (e) => {
         const { name, value } = e.target;
         // Set postcode field input value to state
-        if (name === 'postcode') {
-          handlePostcodeInput(e);
-        }
+        name === 'postcode' && handlePostcodeInput(e);
         setFieldValue(name, value);
-        // setFieldTouched(name, true);
       };
 
       acc.push(
@@ -216,19 +229,10 @@ const SignupForm = () => {
   return (
     <Formik
       // initialValues={formValues}
-      initialValues={{
-        firstName: '',
-        lastName: '',
-        email: '',
-        password: '',
-        addressLine1: '',
-        townOrCity: '',
-        country: '',
-        postcode: '',
-      }}
+      initialValues={initialFormValues}
       validationSchema={validationSchema}
     >
-      {({ errors, touched, setFieldTouched, setFieldValue }) => (
+      {({ errors, touched, setFieldTouched, setFieldValue, validateForm }) => (
         <div className={styles.component}>
           <div className={styles.form_intro}>
             <h3 className={sansRegular.className}>Create your Account</h3>
@@ -252,16 +256,18 @@ const SignupForm = () => {
                 setFieldTouched,
                 setFieldValue
               )}
+            {!manualAddress && (
+              <div className={styles.form_field}>
+                <button
+                  className={`${styles.enterAddressManually} ${sansRegular.className}`}
+                  onClick={() => setManualAddress(!manualAddress)}
+                  type="button"
+                >
+                  Enter address manually
+                </button>
+              </div>
+            )}
 
-            <div className={styles.form_field}>
-              <button
-                className={`${styles.enterAddressManually} ${sansRegular.className}`}
-                onClick={() => setManualAddress(!manualAddress)}
-                type="button"
-              >
-                Enter address manually
-              </button>
-            </div>
             {findAddress && (
               <div className={styles.addressBox}>
                 {sortedAddressList.length >= 1 && (
@@ -279,10 +285,18 @@ const SignupForm = () => {
                 )}
               </div>
             )}
+            {pushErrorMessage && (
+              <div className={styles.errorMessage}>
+                Error. Please review your details
+              </div>
+            )}
             <Button
               text="Sign Up"
               type="submit"
-              onClick={handleFormSubmission(errors)}
+              onClick={() =>
+                validateForm().then((e) => handleFormSubmission(e))
+              }
+              // onClick={(e) => handleFormSubmission(e, errors, values)}
               className={styles.signupButton}
             />
           </Form>
