@@ -4,6 +4,7 @@
       "label": "Email",
       "type": "email",
       "name": "email",
+      "hasIcon": false,
       "required": true
     },
     {
@@ -24,19 +25,23 @@
       "label": "First Name",
       "type": "text",
       "name": "first",
+      "hasIcon": false,
       "required": true
     },
     {
       "label": "Last Name",
       "type": "text",
       "name": "last",
+      "hasIcon": false,
       "required": true
     },
     {
       "label": "Postcode",
       "type": "text",
       "name": "postcode",
-      "buttonLayout": true
+      "hasIcon": false,
+      "layoutSplit": true,
+      "required": true
     }
   ],
   "secondary": [

@@ -1,4 +1,4 @@
-@import '../../../styles/global/variables';
+@import '../../styles/global/variables';
 
 .component {
   .form_intro,
@@ -29,41 +29,33 @@
     }
 
     &_field,
+    .form_field_error,
     .form_field_variant {
-      margin-bottom: 30px;
+      margin-bottom: 35px;
 
-      &_variant {
-        display: flex;
-        justify-content: space-between;
-        align-items: end;
-        gap: 40px;
-        margin-bottom: 10px !important;
-
-        // Find address
-        button {
-          display: block;
-          padding: 10.25px 27px !important;
-          margin-top: 0 !important;
-
-          &:disabled {
-            background: #ebebeb;
-            color: #bbbbbb;
-
-            pointer-events: none;
+      &_error {
+        color: red;
+        input {
+          border: 1px rgba($color: #ee0000, $alpha: 0.5) solid !important;
+          &:hover {
+            border: #ee0000 1px solid;
           }
         }
       }
+
       label {
         position: relative;
         top: -5px;
         font-size: 14px;
         margin-bottom: 245px;
+
+        .form_field_error > {
+        }
       }
       input {
         width: calc(100% - 12px);
         padding: 8.25px 5px;
         border-radius: 3px;
-
         border: 1px rgba($color: #000000, $alpha: 0.5) solid;
         &:hover {
           border: #6ca1ff 1px solid;
@@ -72,8 +64,9 @@
     }
     // Sign up
     button {
+      position: relative;
       padding: 10.25px 76.3px;
-      margin-top: 60px;
+      margin-top: 40px;
     }
     .enterAddressManually {
       text-decoration: underline;
@@ -85,10 +78,15 @@
       color: #000000ba;
       margin-top: 0;
     }
+    .signupButton {
+      margin-bottom: 30px;
+    }
     .addressBox {
       border: #979797 1px solid;
       margin-top: 40px;
       border-radius: 3px;
+      max-height: 320px;
+      overflow: scroll;
       @media only screen and (min-width: $mobile-sm) {
         position: relative;
         width: 450px;

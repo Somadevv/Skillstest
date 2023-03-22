@@ -1,8 +1,11 @@
 import styles from './button.module.scss';
+import cn from 'classnames';
 
-const Button = ({ type, onClick, text, disabled }) => {
+const Button = ({ type, onClick, text, disabled, className }) => {
+  const classes = cn(styles.component, className);
+
   return (
-    <div className={styles.component}>
+    <div className={classes}>
       <button type={type} onClick={onClick} disabled={disabled}>
         {text}
       </button>
