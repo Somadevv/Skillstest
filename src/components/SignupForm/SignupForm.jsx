@@ -136,9 +136,12 @@ const SignupForm = () => {
     return error;
   };
 
-  const handleFormSubmission = (e) => {
+  const handleFormSubmission = (e, email) => {
     if (!Object.keys(e).length >= 1) {
-      router.push('/signup-success');
+      router.push({
+        pathname: '/signup-success',
+        query: { email: email },
+      });
     }
   };
 
@@ -324,11 +327,13 @@ const SignupForm = () => {
                 text="Sign Up"
                 type="submit"
                 onClick={() =>
-                  validateForm().then((e) => handleFormSubmission(e))
+                  validateForm().then((e) =>
+                    handleFormSubmission(e, values.email)
+                  )
                 }
                 className={styles.signupButton}
               />
-              <div className={styles.form_signIn_prompt}>
+              <div className="signin_prompt">
                 <p className={sansRegular.className}>
                   Already signed in?
                   <Link
