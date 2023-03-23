@@ -6,6 +6,10 @@ import parse from 'html-react-parser';
 import { useRouter } from 'next/router';
 import * as Yup from 'yup';
 import { useState } from 'react';
+import Image from 'next/image';
+import showIcon from '../../../public/images/icons/show.svg';
+import hideIcon from '../../../public/images/icons/hide.svg';
+import Link from 'next/link';
 const sansRegular = localFont({
   src: '../../../public/fonts/Soure_Sans_Pro/SourceSansPro-Regular.ttf',
 });
@@ -13,33 +17,70 @@ const sansRegular = localFont({
 const sansLight = localFont({
   src: '../../../public/fonts/Soure_Sans_Pro/SourceSansPro-Light.ttf',
 });
+const sansBold = localFont({
+  src: '../../../public/fonts/Soure_Sans_Pro/SourceSansPro-Bold.ttf',
+});
 
 const SignupForm = () => {
   const [listOfAddresses, setListOfAddresses] = useState({});
+  const [postcode, setPostcode] = useState('');
+  const [enableManualAddress, setEnableManualAddress] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
-  const formFieldTypes = {
+  const handlePasswordVisiblity = () => {
+    setShowPassword(!showPassword);
+  };
+  const fieldTypes = {
     email: 'email',
     text: 'text',
     password: 'password',
   };
+
   const formFieldSchema = {
-    email: { label: 'Email', value: '' },
-    password: { label: 'Password', value: '' },
-    confirmPassword: { label: 'Confirm Password', value: '' },
-    firstName: { label: 'First Name', value: '' },
-    lastName: { label: 'Last Name', value: '' },
-    postcode: { label: 'Postcode', value: '' },
-    addressLine1: { label: 'Address Line 1', value: '' },
-    addressLine2: { label: 'Address Line 2', value: '' },
-    addressLine3: { label: 'Address Line 3', value: '' },
-    townOrCity: { label: 'Town or City', value: '' },
-    country: { label: 'Country', value: '' },
+    email: { label: 'Email', value: '', type: fieldTypes.email },
+    password: { label: 'Password', value: '', type: fieldTypes.password },
+    confirmPassword: {
+      label: 'Confirm Password',
+      value: '',
+      type: fieldTypes.password,
+    },
+    firstName: { label: 'First Name', value: '', type: fieldTypes.text },
+    lastName: { label: 'Last Name', value: '', type: fieldTypes.text },
+    addressLine1: { label: 'Address Line 1', value: '', type: fieldTypes.text },
+    addressLine2: {
+      label: 'Address Line 2 (optional)',
+      value: '',
+      type: fieldTypes.text,
+    },
+    addressLine3: {
+      label: 'Address Line 3 (optional)',
+      value: '',
+      type: fieldTypes.text,
+    },
+    townOrCity: { label: 'Town or City', value: '', type: fieldTypes.text },
+    country: { label: 'Country', value: '', type: fieldTypes.text },
+    postcode: { label: 'Postcode', value: '', type: fieldTypes.text },
   };
   // Reduce formFieldSchema to key: value
   const formInitialValues = Object.keys(formFieldSchema).reduce((acc, key) => {
     acc[key] = formFieldSchema[key].value || '';
     return acc;
   }, {});
+
+  const reducer = (acc, key) => {
+    acc[key] = formInitialValues[key].value || '';
+    return acc;
+  };
+
+  // Rendered form fields if manual address == false
+  const formPrimarySection = [
+    'email',
+    'password',
+    'confirmPassword',
+    'firstName',
+    'lastName',
+    'postcode',
+  ].reduce(reducer, {});
 
   // Handle address box list items
   const handleAddressItem = (e, setFieldValue) => {
@@ -50,25 +91,34 @@ const SignupForm = () => {
     setFieldValue('country', parse(country));
 
     // TODO close address list box
+    setListOfAddresses({});
+    setEnableManualAddress(true);
   };
 
   const fetchPostcode = async (postcode) => {
-    const response = await fetch(
-      `https://api.getAddress.io/find/${postcode}?api-key=${process.env.NEXT_PUBLIC_API_KEY}`
-    );
-    const postcodeData = await response.json();
+    // const response = await fetch(
+    //   `https://api.getAddress.io/find/${postcode}?api-key=${process.env.NEXT_PUBLIC_API_KEY}`
+    // );
+    // const postcodeData = await response.json();
 
-    if (postcodeData?.addresses?.length < 1) {
-      throw new RangeError('No addresses were found for the given postcode');
-    }
+    // if (postcodeData?.addresses?.length < 1) {
+    //   throw new RangeError('No addresses were found for the given postcode');
+    // }
 
-    const formattedAddresses = postcodeData.addresses.map((address) => {
-      const addressParts = address.split(', ').filter(Boolean);
-      addressParts.push(postcode.toUpperCase());
+    // const formattedAddresses = postcodeData.addresses.map((address) => {
+    //   const addressParts = address.split(', ').filter(Boolean);
+    //   addressParts.push(postcode.toUpperCase());
 
-      return addressParts.join(', ');
-    });
-    setListOfAddresses(formattedAddresses);
+    //   return addressParts.join(', ');
+    // });
+    // console.log(formattedAddresses);
+    setListOfAddresses([
+      '51 High Street, Penzance, Cornwall, TR18 2SU',
+      '51a High Street, Penzance, Cornwall, TR18 2SU',
+      '52 High Street, Penzance, Cornwall, TR18 2SU',
+      '53 High Street, Penzance, Cornwall, TR18 2SU',
+      '54 High Street, Penzance, Cornwall, TR18 2SU',
+    ]);
   };
 
   // TODO: Validate postcode
@@ -80,11 +130,43 @@ const SignupForm = () => {
     if (!postcodeRegex.test(postcode)) {
       error = 'Invalid UK postcode';
     } else {
-      fetchPostcode(postcode);
+      setPostcode(postcode);
     }
 
     return error;
   };
+
+  const handleFindAddress = () => {
+    if (postcode.length > 1) {
+      fetchPostcode(postcode);
+    } else {
+      console.log('invalid!');
+    }
+  };
+
+  const handleFormSubmission = (e) => {
+    // if (Object.keys(e).length >= 1) {
+    //   setPushErrorMessage(true);
+    // } else {
+    //   setPushErrorMessage(false);
+    //   router.push('/signup-success');
+    // }
+  };
+
+  // Control field types
+  const getInputFieldType = (field) => {
+    const fieldType = formFieldSchema[field]?.type;
+    if (fieldType === 'password' && showPassword) {
+      return 'text';
+    }
+
+    return fieldType || 'text';
+  };
+
+  // Generate form sections (state dependant)
+  const formToRender = !enableManualAddress
+    ? formPrimarySection
+    : formInitialValues;
 
   return (
     <Formik
@@ -115,16 +197,19 @@ const SignupForm = () => {
         setFieldValue,
         setFieldTouched,
         validateField,
+        validateForm,
       }) => (
         <div className={styles.component}>
+          {/* Form Create your Account into */}
           <div className={styles.form_intro}>
             <h3 className={sansRegular.className}>Create your Account</h3>
             <p className={sansLight.className}>
               In 30 seconds you&#39;ll be a sign up pro!
             </p>
           </div>
+          {/* Main form */}
           <Form className={styles.form}>
-            {Object.keys(formFieldSchema).map((field) => (
+            {Object.keys(formToRender).map((field) => (
               <div
                 key={field}
                 className={`${
@@ -135,12 +220,22 @@ const SignupForm = () => {
               >
                 <div>
                   <label htmlFor={field}>
-                    {touched[field] && errors[field] ? errors[field] : field}
+                    {touched[field] && errors[field] ? (
+                      <p className={`${sansLight.className} errorLabel`}>
+                        {errors[field]}
+                      </p>
+                    ) : (
+                      formFieldSchema[field].label
+                    )}
                   </label>
                   <Field
                     validate={field === 'postcode' && validatePostcode}
                     name={field}
                     id={field}
+                    className={
+                      touched[field] && errors[field] ? 'errorField' : ''
+                    }
+                    type={getInputFieldType(formFieldSchema[field].type)}
                     onBlur={() => setFieldTouched(field, true)}
                     onChange={(e) => {
                       setFieldValue(
@@ -149,12 +244,25 @@ const SignupForm = () => {
                       );
                     }}
                   />
+                  {formFieldSchema[field].type === 'password' && (
+                    <Image
+                      className={styles.icon}
+                      src={showPassword ? showIcon : hideIcon}
+                      alt=""
+                      onClick={handlePasswordVisiblity}
+                      width={15}
+                      height={15}
+                    />
+                  )}
                 </div>
                 {field === 'postcode' && (
                   <div>
                     <Button
                       text="Find Address"
-                      onClick={() => validateField('postcode')}
+                      onClick={() => {
+                        validateField('postcode');
+                        handleFindAddress();
+                      }}
                       type="button"
                       disabled={false /* TODO */}
                     />
@@ -162,6 +270,18 @@ const SignupForm = () => {
                 )}
               </div>
             ))}
+
+            <div className={styles.form_field}>
+              <button
+                className={`${styles.enterAddressManually} ${sansRegular.className}`}
+                onClick={() => setEnableManualAddress(!enableManualAddress)}
+                type="button"
+              >
+                {enableManualAddress
+                  ? 'Hide address details'
+                  : 'Enter address manually'}
+              </button>
+            </div>
 
             {listOfAddresses.length >= 1 && (
               <div className={`${sansRegular.className} ${styles.addressBox}`}>
@@ -186,6 +306,33 @@ const SignupForm = () => {
                 )}
               </div>
             )}
+            {Object.keys(errors).length > 0 && (
+              <div
+                className={`${styles.errorMessage} ${sansRegular.className}`}
+              >
+                Error. Please review your details
+              </div>
+            )}
+            <Button
+              text="Sign Up"
+              type="submit"
+              onClick={() =>
+                validateForm().then((e) => handleFormSubmission(e))
+              }
+              // onClick={(e) => handleFormSubmission(e, errors, values)}
+              className={styles.signupButton}
+            />
+            <div className={styles.form_signIn_prompt}>
+              <p className={sansRegular.className}>
+                Already signed in?
+                <Link
+                  href="/"
+                  className={`${sansBold.className} hightlight-pink`}
+                >
+                  &nbsp;Login
+                </Link>
+              </p>
+            </div>
           </Form>
         </div>
       )}

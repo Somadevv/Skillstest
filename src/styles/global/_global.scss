@@ -7,3 +7,19 @@ body {
 .highlight-text-main {
   color: $color-main-pink !important;
 }
+
+.errorLabel {
+  position: relative;
+  color: #d0021b;
+  margin: auto;
+  top: 2px;
+}
+
+.errorField {
+  border: 1px rgba($color: #d0021b, $alpha: 0.5) solid !important;
+  margin-top: 2px;
+}
+
+.hightlight-pink {
+  color: $color-main-pink;
+}
