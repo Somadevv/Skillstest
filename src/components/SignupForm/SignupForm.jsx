@@ -52,26 +52,6 @@ const SignupForm = () => {
     // TODO close address list box
   };
 
-  // Fetch address via postcode
-  const fetchPostcodeOld = async () => {
-    const response = await fetch(
-      `https://api.getAddress.io/find/${enteredPostcode}?api-key=${process.env.NEXT_PUBLIC_API_KEY}`
-    );
-    const data = await response.json();
-    if (!data.addresses.length >= 1) {
-      throw new Error('Postcode address list response was invalid');
-    } else {
-      // Format address data
-      const formattedAddresses = data.addresses.map((address) => {
-        const addressParts = address.split(', ').filter(Boolean);
-        addressParts.push(enteredPostcode.toUpperCase());
-
-        return addressParts.join(', ');
-      });
-      setListOfAddresses(formattedAddresses);
-    }
-  };
-
   const fetchPostcode = async (postcode) => {
     const response = await fetch(
       `https://api.getAddress.io/find/${postcode}?api-key=${process.env.NEXT_PUBLIC_API_KEY}`
