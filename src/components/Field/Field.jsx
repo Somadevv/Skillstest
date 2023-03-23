@@ -27,13 +27,10 @@ const FormField = ({
   );
   const [showPassword, setShowPassword] = useState(false);
 
-  let passwordRef = React.createRef();
-
   const handlePasswordVisiblity = (newState) => {
     setShowPassword(!showPassword);
     setIconState(!showPassword);
     console.log(iconState);
-    // passwordRef.current.type = 'text';
   };
 
   return (
