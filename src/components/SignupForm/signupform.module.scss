@@ -1,0 +1,152 @@
+@import '../../styles/global/variables';
+
+.component {
+  .form_intro,
+  .form {
+    margin: 0 auto;
+
+    @media only screen and (min-width: $mobile-sm) {
+      max-width: 300px;
+    }
+  }
+  .form_intro {
+    margin: 60px auto;
+  }
+
+  .form {
+    position: relative;
+    &_intro {
+      text-align: center;
+      h3 {
+        font-size: 24px;
+        font-weight: 900;
+        margin-block-end: 0;
+        margin-block-start: 0;
+      }
+      p {
+        font-size: 20px;
+      }
+    }
+
+    &_field,
+    .form_field_variant {
+      position: relative;
+      margin-bottom: 35px;
+
+      &_variant {
+        display: flex;
+        align-items: flex-start;
+        gap: 30px;
+
+        div > button {
+          padding: 9px 25px;
+          margin-top: 18px;
+        }
+      }
+
+      label {
+        position: relative;
+        top: -5px;
+        font-size: 14px;
+      }
+      input {
+        width: calc(100% - 12px);
+        padding: 9.25px 5px;
+        border-radius: 3px;
+        border: 1px rgba($color: #000000, $alpha: 0.5) solid;
+        &:hover {
+          border: #6ca1ff 1px solid;
+        }
+      }
+    }
+    // Sign up
+    button {
+      position: relative;
+      padding: 10.25px 76.3px;
+      margin-top: 40px;
+    }
+    .enterAddressManually {
+      text-decoration: underline;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 0;
+      font-size: 16px;
+      color: #000000ba;
+      margin-top: 0;
+    }
+    .signupButton {
+      margin-bottom: 30px;
+    }
+    .errorMessage {
+      position: relative;
+      text-align: center;
+      color: #d0021b;
+      margin-top: 10px;
+    }
+    .icon {
+      position: absolute;
+      right: 7.5px;
+      top: 30px;
+      z-index: 100;
+    }
+    .addressBox {
+      position: relative;
+      border: #979797 1px solid;
+      margin-top: 40px;
+      border-radius: 3px;
+      max-height: 320px;
+      overflow: scroll;
+      @media only screen and (min-width: $mobile-sm) {
+        position: relative;
+        width: 450px;
+        left: -75px;
+      }
+
+      &_info {
+        display: flex;
+        justify-content: space-between;
+        position: sticky;
+        padding: 11px 6px;
+        top: 0;
+        background: #fff;
+        font-size: 14px;
+        @media only screen and (min-width: $mobile-sm) {
+          font-size: 16px;
+        }
+      }
+
+      ul {
+        list-style: none;
+        margin-block-start: 0;
+        margin-block-end: 0;
+        padding: 0;
+        overflow-y: scroll;
+        overflow: hidden;
+
+        li {
+          padding: 11px 6px;
+          background: #fff;
+          cursor: pointer;
+          transition: 0.06s;
+          font-size: 14px;
+          @media only screen and (min-width: $mobile-sm) {
+            font-size: 16px;
+          }
+
+          &:hover {
+            background: #c8c7c7;
+          }
+        }
+
+        li:nth-child(odd) {
+          background: #e9e9e9;
+
+          &:hover {
+            background: #c8c7c7;
+          }
+        }
+      }
+    }
+  }
+}

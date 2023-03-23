@@ -1,0 +1,23 @@
+.component {
+  position: relative;
+  &_split {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 40px;
+    margin-bottom: 10px !important;
+
+    // Find address
+    button {
+      display: block;
+      padding: 10.25px 27px !important;
+      margin-top: 0 !important;
+
+      &:disabled {
+        background: #ebebeb;
+        color: #bbbbbb;
+        pointer-events: none;
+      }
+    }
+  }
+}

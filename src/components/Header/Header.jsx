@@ -1,12 +1,12 @@
 import React from 'react';
 import styles from './header.module.scss';
-import Image from '../../atoms/Image/Image';
+import Image from '../Image/Image';
 import Link from 'next/link';
 import localFont from 'next/font/local';
-import Container from '../../common/Container/Container';
+import Container from '../Container/Container';
 
 const sansLight = localFont({
-  src: '../../../../public/fonts/Soure_Sans_Pro/SourceSansPro-SemiBold.ttf',
+  src: '../../../public/fonts/Soure_Sans_Pro/SourceSansPro-SemiBold.ttf',
 });
 const Header = () => {
   return (
