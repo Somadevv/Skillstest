@@ -89,15 +89,12 @@ const SignupForm = () => {
   const handleFindAddress = () => {
     if (postcode.length > 1) {
       fetchPostcode(postcode);
-    } else {
-      console.log('invalid!');
     }
   };
 
   // Handle address box list items
   const handleAddressItem = (e, setFieldValue) => {
     const addressParts = e.currentTarget.innerHTML.split(', ').map(parse);
-    console.log(addressParts);
     const [addressLine1, townOrCity, country] = addressParts;
     setFieldValue('addressLine1', parse(addressLine1));
     setFieldValue('townOrCity', parse(townOrCity));
