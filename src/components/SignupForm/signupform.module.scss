@@ -82,6 +82,7 @@
       position: relative;
       text-align: center;
       color: #d0021b;
+      margin-top: 10px;
     }
     .icon {
       position: absolute;
@@ -106,9 +107,13 @@
         display: flex;
         justify-content: space-between;
         position: sticky;
-        padding: 5px;
+        padding: 11px 6px;
         top: 0;
         background: #fff;
+        font-size: 14px;
+        @media only screen and (min-width: $mobile-sm) {
+          font-size: 16px;
+        }
       }
 
       ul {
