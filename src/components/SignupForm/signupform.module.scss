@@ -29,17 +29,17 @@
     }
 
     &_field,
-    .form_field_error,
     .form_field_variant {
       margin-bottom: 35px;
 
-      &_error {
-        color: red;
-        input {
-          border: 1px rgba($color: #ee0000, $alpha: 0.5) solid !important;
-          &:hover {
-            border: #ee0000 1px solid;
-          }
+      &_variant {
+        display: flex;
+        align-items: flex-start;
+        gap: 30px;
+
+        div > button {
+          padding: 9px 25px;
+          margin-top: 18px;
         }
       }
 
@@ -48,13 +48,10 @@
         top: -5px;
         font-size: 14px;
         margin-bottom: 245px;
-
-        .form_field_error > {
-        }
       }
       input {
         width: calc(100% - 12px);
-        padding: 8.25px 5px;
+        padding: 9.25px 5px;
         border-radius: 3px;
         border: 1px rgba($color: #000000, $alpha: 0.5) solid;
         &:hover {
@@ -86,6 +83,7 @@
       color: red;
     }
     .addressBox {
+      position: relative;
       border: #979797 1px solid;
       margin-top: 40px;
       border-radius: 3px;
@@ -97,12 +95,22 @@
         left: -75px;
       }
 
+      &_info {
+        display: flex;
+        justify-content: space-between;
+        position: sticky;
+        padding: 5px;
+        top: 0;
+        background: #fff;
+      }
+
       ul {
         list-style: none;
         margin-block-start: 0;
         margin-block-end: 0;
         padding: 0;
         overflow-y: scroll;
+        overflow: hidden;
 
         li {
           padding: 11px 6px;

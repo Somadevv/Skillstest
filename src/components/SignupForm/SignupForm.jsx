@@ -1,14 +1,11 @@
-import { useState } from 'react';
-import { Formik, Form, Field, setFieldValue } from 'formik';
+import { Field, Formik, Form, setFieldValue } from 'formik';
 import styles from './signupform.module.scss';
 import localFont from 'next/font/local';
 import Button from '../Button/Button';
-import FormField from '../Field/Field';
 import parse from 'html-react-parser';
 import { useRouter } from 'next/router';
-
 import * as Yup from 'yup';
-
+import { useState } from 'react';
 const sansRegular = localFont({
   src: '../../../public/fonts/Soure_Sans_Pro/SourceSansPro-Regular.ttf',
 });
@@ -16,223 +13,129 @@ const sansRegular = localFont({
 const sansLight = localFont({
   src: '../../../public/fonts/Soure_Sans_Pro/SourceSansPro-Light.ttf',
 });
-// Declare validation schema
-const validationSchema = Yup.object().shape({
-  email: Yup.string()
-    .email('Invalid email address')
-    .required('Email is required'),
-  password: Yup.string()
-    .min(8, 'Password must be at least 8 characters')
-    .required('Password is required'),
-  confirmPassword: Yup.string()
-    .oneOf([Yup.ref('password'), null], 'Passwords must match')
-    .required('Confirm password is required'),
-  firstName: Yup.string().required('First name is required'),
-  lastName: Yup.string().required('Last name is required'),
-  postcode: Yup.string().required('Postcode is required'),
-  addressLine1: Yup.string().required('Enter an Address'),
-  townOrCity: Yup.string().required('Enter a Town or City'),
-  country: Yup.string().required('Enter a Country'),
-});
 
 const SignupForm = () => {
-  const router = useRouter();
-  const [manualAddress, setManualAddress] = useState(false);
-  const [pushErrorMessage, setPushErrorMessage] = useState(false);
-  const [iconState, setIconState] = useState(false);
-  const [enteredPostcode, setEnteredPostcode] = useState('');
-  const [sortedAddressList, setSortedAddressList] = useState({});
-  const [findAddress, setFindAddress] = useState(false);
+  const [listOfAddresses, setListOfAddresses] = useState({});
 
-  const initialFormValues = {
-    firstName: '',
-    lastName: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
-    addressLine1: '',
-    townOrCity: '',
-    country: '',
-    postcode: '',
+  const formFieldTypes = {
+    email: 'email',
+    text: 'text',
+    password: 'password',
   };
+  const formFieldSchema = {
+    email: { label: 'Email', value: '' },
+    password: { label: 'Password', value: '' },
+    confirmPassword: { label: 'Confirm Password', value: '' },
+    firstName: { label: 'First Name', value: '' },
+    lastName: { label: 'Last Name', value: '' },
+    postcode: { label: 'Postcode', value: '' },
+    addressLine1: { label: 'Address Line 1', value: '' },
+    addressLine2: { label: 'Address Line 2', value: '' },
+    addressLine3: { label: 'Address Line 3', value: '' },
+    townOrCity: { label: 'Town or City', value: '' },
+    country: { label: 'Country', value: '' },
+  };
+  // Reduce formFieldSchema to key: value
+  const formInitialValues = Object.keys(formFieldSchema).reduce((acc, key) => {
+    acc[key] = formFieldSchema[key].value || '';
+    return acc;
+  }, {});
 
-  const formFields = {
-    primaryFields: [
-      { name: 'email', type: 'email', label: 'Email' },
-      {
-        name: 'password',
-        type: 'password',
-        label: 'Password',
-        toggleIcon: true,
-      },
-      {
-        name: 'confirmPassword',
-        type: 'password',
-        label: 'Confirm Password',
-        toggleIcon: true,
-      },
-      { name: 'firstName', type: 'text', label: 'First Name' },
-      { name: 'lastName', type: 'text', label: 'Last Name' },
-      {
-        name: 'postcode',
-        type: 'text',
-        label: 'Postcode',
-        splitLayout: true,
-      },
-    ],
-    secondaryFields: [
-      {
-        name: 'addressLine1',
-        type: 'text',
-        label: 'Address Line 1',
-      },
-      {
-        name: 'addressLine2',
-        type: 'text',
-        label: 'Address Line 2 (optional)',
-      },
-      {
-        name: 'addressLine3',
-        type: 'text',
-        label: 'Address Line 3 (optional)',
-      },
-      { name: 'townOrCity', type: 'text', label: 'Town or City', value: '' },
-      { name: 'country', type: 'text', label: 'Country', value: '' },
-    ],
-  };
-
-  const [primaryFields, setPrimaryFields] = useState(formFields.primaryFields);
-  const [secondaryFields, setSecondaryFields] = useState(
-    formFields.secondaryFields
-  );
-  // Set postcode input
-  const handlePostcodeInput = (e) => {
-    e.preventDefault();
-    setEnteredPostcode(e.currentTarget.value);
-  };
-  // Handles find address box
-  const handleFindAddress = () => {
-    setFindAddress(!findAddress);
-    fetchPostcode(enteredPostcode);
-  };
-  const fetchPostcode = () => {
-    // Fetch postcode with postcode as parameter
-    fetch(
-      `https://api.getAddress.io/find/${enteredPostcode}?api-key=${process.env.NEXT_PUBLIC_API_KEY}`
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.addresses.length >= 1) {
-          formatAddresses(data);
-        } else {
-          console.log('No addresses found');
-        }
-      });
-  };
   // Handle address box list items
   const handleAddressItem = (e, setFieldValue) => {
-    const clickedFieldValue = e.currentTarget.innerHTML.split(', ');
-    setFieldValue('addressLine1', parse(clickedFieldValue[0]));
-    setFieldValue('townOrCity', parse(clickedFieldValue[1]));
-    setFieldValue('country', parse(clickedFieldValue[2]));
-    setManualAddress(true);
-    setFindAddress(false);
-  };
-  // Format address data
-  const formatAddresses = (address) => {
-    let formattedAddress = Object.values(address.addresses).map((address) => {
-      let x = address.split(', ').filter(Boolean).join(', ');
-      x += `, ${enteredPostcode.toUpperCase()}`;
-      return x;
-    });
-    setSortedAddressList(formattedAddress);
+    const addressParts = e.currentTarget.innerHTML.split(', ').map(parse);
+    const [addressLine1, townOrCity, country] = addressParts;
+    setFieldValue('addressLine1', parse(addressLine1));
+    setFieldValue('townOrCity', parse(townOrCity));
+    setFieldValue('country', parse(country));
+
+    // TODO close address list box
   };
 
-  const handleFormSubmission = (e) => {
-    if (Object.keys(e).length >= 1) {
-      setPushErrorMessage(true);
+  // Fetch address via postcode
+  const fetchPostcodeOld = async () => {
+    const response = await fetch(
+      `https://api.getAddress.io/find/${enteredPostcode}?api-key=${process.env.NEXT_PUBLIC_API_KEY}`
+    );
+    const data = await response.json();
+    if (!data.addresses.length >= 1) {
+      throw new Error('Postcode address list response was invalid');
     } else {
-      setPushErrorMessage(false);
-      router.push('/signup-success');
+      // Format address data
+      const formattedAddresses = data.addresses.map((address) => {
+        const addressParts = address.split(', ').filter(Boolean);
+        addressParts.push(enteredPostcode.toUpperCase());
+
+        return addressParts.join(', ');
+      });
+      setListOfAddresses(formattedAddresses);
     }
   };
 
-  // Generate form fields
-  const generateFormFields = (
-    errors,
-    touched,
-    formType,
-    setFieldTouched,
-    setFieldValue
-  ) => {
-    const arrToMap = formType === 1 ? primaryFields : secondaryFields;
-    const fields = arrToMap.reduce((acc, field) => {
-      const { name, type, label, splitLayout, toggleIcon } = field;
-      const fieldError = errors[name] && touched[name];
+  const fetchPostcode = async (postcode) => {
+    const response = await fetch(
+      `https://api.getAddress.io/find/${postcode}?api-key=${process.env.NEXT_PUBLIC_API_KEY}`
+    );
+    const postcodeData = await response.json();
 
-      const handleChange = (e) => {
-        const { name, value } = e.target;
-        // Set postcode field input value to state
-        name === 'postcode' && handlePostcodeInput(e);
-        setFieldValue(name, value);
-      };
+    if (postcodeData?.addresses?.length < 1) {
+      throw new RangeError('No addresses were found for the given postcode');
+    }
 
-      acc.push(
-        <div
-          key={name}
-          className={`${
-            fieldError ? styles.form_field_error : styles.form_field
-          } ${sansLight.className}`}
-        >
-          <FormField
-            field={
-              <Field
-                onBlur={() => setFieldTouched(field.name, true)}
-                className={touched.name && errors.name ? 'error' : null}
-                type={
-                  type === 'password' ? (iconState ? 'text' : 'password') : type
-                }
-                id={name}
-                name={name}
-                onChange={(e) => {
-                  handleChange(e);
-                }}
-              />
-            }
-            setIconState={setIconState}
-            iconState={iconState}
-            type={type}
-            id={name}
-            handleChange={(e) => {
-              handleChange(e);
-            }}
-            setFieldTouched={setFieldTouched}
-            touched={touched}
-            requiresIcon={toggleIcon}
-            enableButton={splitLayout}
-            buttonOnClick={handleFindAddress}
-            buttonText="Find Address"
-            buttonType="button"
-            buttonDisabled={manualAddress}
-            labelFor={name}
-            labelText={fieldError ? errors[name] : label}
-          />
-        </div>
-      );
+    const formattedAddresses = postcodeData.addresses.map((address) => {
+      const addressParts = address.split(', ').filter(Boolean);
+      addressParts.push(postcode.toUpperCase());
 
-      return acc;
-    }, []);
+      return addressParts.join(', ');
+    });
+    setListOfAddresses(formattedAddresses);
+  };
 
-    return fields;
+  // TODO: Validate postcode
+
+  const validatePostcode = (postcode) => {
+    let error;
+    const postcodeRegex = /^[A-Z]{1,2}[0-9]{1,2}[A-Z]? [0-9][A-Z]{2}$/;
+
+    if (!postcodeRegex.test(postcode)) {
+      error = 'Invalid UK postcode';
+    } else {
+      fetchPostcode(postcode);
+    }
+
+    return error;
   };
 
   return (
     <Formik
-      // initialValues={formValues}
-      initialValues={initialFormValues}
-      validationSchema={validationSchema}
+      initialValues={formInitialValues}
+      validationSchema={Yup.object().shape({
+        email: Yup.string()
+          .email('Please enter a valid email')
+          .required('Email is required'),
+        password: Yup.string()
+          .min(8, 'Password must be at least 8 characters')
+          .required('Password is required'),
+        confirmPassword: Yup.string()
+          .oneOf([Yup.ref('password'), null], 'Passwords must match')
+          .min(8, 'Password must be at least 8 characters')
+          .required('Confirm password is required'),
+        firstName: Yup.string().required('First name is required'),
+        lastName: Yup.string().required('Last name is required'),
+        postcode: Yup.string().required('Postcode is required'),
+        addressLine1: Yup.string().required('Enter an Address'),
+        townOrCity: Yup.string().required('Enter a Town or City'),
+        country: Yup.string().required('Enter a Country'),
+      })}
     >
-      {({ errors, touched, setFieldTouched, setFieldValue, validateForm }) => (
+      {({
+        errors,
+        touched,
+        values,
+        setFieldValue,
+        setFieldTouched,
+        validateField,
+      }) => (
         <div className={styles.component}>
           <div className={styles.form_intro}>
             <h3 className={sansRegular.className}>Create your Account</h3>
@@ -241,64 +144,68 @@ const SignupForm = () => {
             </p>
           </div>
           <Form className={styles.form}>
-            {generateFormFields(
-              errors,
-              touched,
-              1,
-              setFieldTouched,
-              setFieldValue
-            )}
-            {manualAddress &&
-              generateFormFields(
-                errors,
-                touched,
-                2,
-                setFieldTouched,
-                setFieldValue
-              )}
-            {!manualAddress && (
-              <div className={styles.form_field}>
-                <button
-                  className={`${styles.enterAddressManually} ${sansRegular.className}`}
-                  onClick={() => setManualAddress(!manualAddress)}
-                  type="button"
-                >
-                  Enter address manually
-                </button>
+            {Object.keys(formFieldSchema).map((field) => (
+              <div
+                key={field}
+                className={`${
+                  field === 'postcode'
+                    ? styles.form_field_variant
+                    : styles.form_field
+                } ${sansLight.className}`}
+              >
+                <div>
+                  <label htmlFor={field}>
+                    {touched[field] && errors[field] ? errors[field] : field}
+                  </label>
+                  <Field
+                    validate={field === 'postcode' && validatePostcode}
+                    name={field}
+                    id={field}
+                    onBlur={() => setFieldTouched(field, true)}
+                    onChange={(e) => {
+                      setFieldValue(
+                        e.currentTarget.name,
+                        e.currentTarget.value
+                      );
+                    }}
+                  />
+                </div>
+                {field === 'postcode' && (
+                  <div>
+                    <Button
+                      text="Find Address"
+                      onClick={() => validateField('postcode')}
+                      type="button"
+                      disabled={false /* TODO */}
+                    />
+                  </div>
+                )}
               </div>
-            )}
+            ))}
 
-            {findAddress && (
-              <div className={styles.addressBox}>
-                {sortedAddressList.length >= 1 && (
-                  <ul>
-                    {sortedAddressList.map((item, idx) => (
-                      <li
-                        key={idx}
-                        className={sansRegular.className}
-                        onClick={(e) => handleAddressItem(e, setFieldValue)}
-                      >
-                        {item}
-                      </li>
-                    ))}
-                  </ul>
+            {listOfAddresses.length >= 1 && (
+              <div className={`${sansRegular.className} ${styles.addressBox}`}>
+                {listOfAddresses.length >= 1 && (
+                  <>
+                    <div className={styles.addressBox_info}>
+                      Addresses Found: {listOfAddresses.length}
+                      <span>Postcode: {values.postcode}</span>
+                    </div>
+                    <ul>
+                      {listOfAddresses.map((item, idx) => (
+                        <li
+                          key={idx}
+                          className={sansRegular.className}
+                          onClick={(e) => handleAddressItem(e, setFieldValue)}
+                        >
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                  </>
                 )}
               </div>
             )}
-            {pushErrorMessage && (
-              <div className={styles.errorMessage}>
-                Error. Please review your details
-              </div>
-            )}
-            <Button
-              text="Sign Up"
-              type="submit"
-              onClick={() =>
-                validateForm().then((e) => handleFormSubmission(e))
-              }
-              // onClick={(e) => handleFormSubmission(e, errors, values)}
-              className={styles.signupButton}
-            />
           </Form>
         </div>
       )}
