@@ -1,0 +1,26 @@
+@import '../styles/global/variables';
+.page {
+  text-align: center;
+  padding: 60px 0;
+
+  .body {
+    .title {
+      font-size: 24px;
+    }
+    .desc {
+      font-size: 16px;
+      max-width: 480px;
+      margin: 0 auto;
+      line-height: 1.5;
+      @media only screen and (min-width: $mobile-sm) {
+        font-size: 20px;
+      }
+    }
+    .prompt {
+      font-size: 14px;
+      @media only screen and (min-width: $mobile-sm) {
+        font-size: 16px;
+      }
+    }
+  }
+}

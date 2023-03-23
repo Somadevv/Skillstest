@@ -3,7 +3,6 @@
 .component {
   button {
     display: block;
-    // padding: 10.25px 76.3px;
     background: $color-main-green;
     color: #fff;
     border: 0;
@@ -13,6 +12,12 @@
     cursor: pointer;
     border: transparent 1px solid;
     transition: 0.15s;
+
+    &:disabled {
+      pointer-events: none;
+      background: #eaeaea;
+      color: #bbbbbb;
+    }
 
     &:hover {
       background: #fff;
